@@ -1,4 +1,4 @@
-module middleware
+module github.com/BumwooPark/middleware
 
 go 1.13
 
