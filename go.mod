@@ -1,4 +1,4 @@
-module github.com/BumwooPark/middleware
+module github.com/BumwooPark/util
 
 go 1.13
 
