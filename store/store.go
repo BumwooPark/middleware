@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"github.com/spf13/viper"
 	"time"
 )
 
@@ -51,15 +52,20 @@ func ConnMaxLifetime(t time.Duration) Option {
 	})
 }
 
-func NewDatabase(addr, id, pw, database string, ops ...Option) Store {
-
+func NewDatabase(ops ...Option) Store {
+	id := viper.Get("database.id")
+	pw := viper.Get("database.password")
+	url := viper.Get("database.url")
+	port := viper.Get("database.port")
+	schema := viper.Get("database.schema")
 	options := options{
 		maxIdleConns:    10,
 		maxOpenConns:    100,
 		connMaxLifetime: time.Hour,
 	}
-	url := fmt.Sprintf("%s:%s@(%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", id, pw, addr, database)
-	db, err := gorm.Open("mysql", url)
+	_url := fmt.Sprintf("%s:%s@(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", id, pw, url, port, schema)
+
+	db, err := gorm.Open("mysql", _url)
 	if err != nil {
 		panic(err)
 	}
